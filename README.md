@@ -11,7 +11,7 @@ $ curl -k https://172.27.0.5:10259/metrics > test.metrics
 
 ## Important metrcis
 ```
-cat test.metrics | grep -i scheduler_pod_scheduling_sli_duration_seconds
+$ cat test.metrics | grep -i scheduler_pod_scheduling_sli_duration_seconds
 # HELP scheduler_pod_scheduling_sli_duration_seconds [BETA] E2e latency for a pod being scheduled, from the time the pod enters the scheduling queue and might involve multiple scheduling attempts.
 # TYPE scheduler_pod_scheduling_sli_duration_seconds histogram
 scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.01"} 13
