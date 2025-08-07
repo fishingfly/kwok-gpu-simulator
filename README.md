@@ -2,6 +2,7 @@
 ## Create a k8s cluster by kwokctl config file
 ```bash
 $ ./kwokctl create cluster --config=./test.yaml  --name=demo
+$ kubectl cluster-info --context kwok-demo
 ```
 ## Get kube-scheduler metrics
 ```bash
@@ -48,4 +49,10 @@ scheduler_pod_scheduling_sli_duration_seconds_count{attempts="1"} 16
 ## Batch generate nodes
 ```bash
 $ ./generate-nodes.sh 12500
+```
+
+## Create nodes and pods
+```
+$ kubectl apply -f nodes
+$ kubectl applt -f pod.yaml
 ```
