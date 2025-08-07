@@ -56,3 +56,8 @@ $ ./generate-nodes.sh 12500
 $ kubectl apply -f nodes
 $ kubectl applt -f pod.yaml
 ```
+
+## How to clean last metrics
+```bash
+$ docker restart kwok-demo-kube-scheduler
+```
