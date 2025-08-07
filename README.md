@@ -43,4 +43,9 @@ scheduler_pod_scheduling_sli_duration_seconds_count{attempts="1"} 16
 含义：
 - 总共有 16 个 Pod 是第一次调度就成功；
 - 它们调度时间的总和是 0.1066 秒；
-- 所以平均调度耗时 ≈ 0.1066 / 16 = 6.66 ms。
+- 所以平均调度耗时 ≈ 0.1066 / 16 = 6.66 ms.
+
+## Batch generate nodes
+```bash
+$ ./generate-nodes.sh 12500
+```
