@@ -1,0 +1,27 @@
+apiVersion: kubescheduler.config.k8s.io/v1
+kind: KubeSchedulerConfiguration
+
+percentageOfNodesToScore: 5   # 只评分 5% 节点
+parallelism: 64               # 并行度
+
+profiles:
+- schedulerName: default-scheduler
+  plugins:
+    score:
+      disabled:
+      - name: "*"
+      enabled:
+      - name: NodeResourcesFit
+    filter:
+      disabled:
+      - name: "*"
+      enabled:
+      - name: NodeResourcesFit  # CPU/内存/GPU等资源匹配
+      - name: NodePorts         # 检查端口冲突
+      - name: TaintToleration   # 污点容忍（新名字）
+  pluginConfig:
+  - name: NodeResourcesFit
+    args:
+      scoringStrategy:
+        type: LeastAllocated
+

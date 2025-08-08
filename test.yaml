@@ -62,6 +62,7 @@ options:
   kubeControllerManagerNodeMonitorPeriodMilliseconds: 5000
   kubeSchedulerBinary: https://dl.k8s.io/release/v1.32.3/bin/linux/amd64/kube-scheduler
   kubeSchedulerImage: registry.k8s.io/kube-scheduler:v1.32.3
+  kubeSchedulerConfig: /root/go/src/github.com/fishingfly/kwok-gpu-simulator/kube-schduler-config.yaml
   kubeVersion: v1.32.3
   kubectlBinary: https://dl.k8s.io/release/v1.32.3/bin/linux/amd64/kubectl
   kubectlImage: registry.k8s.io/kubectl:v1.32.3
