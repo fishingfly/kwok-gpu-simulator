@@ -84,6 +84,34 @@ scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="5242.88"} 
 scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="+Inf"} 30000
 scheduler_pod_scheduling_sli_duration_seconds_sum{attempts="1"} 659.9889770920037
 scheduler_pod_scheduling_sli_duration_seconds_count{attempts="1"} 30000
+
+# 4W 
+cat test.metrics | grep -i scheduler_pod_scheduling_sli_duration_seconds
+# HELP scheduler_pod_scheduling_sli_duration_seconds [BETA] E2e latency for a pod being scheduled, from the time the pod enters the scheduling queue and might involve multiple scheduling attempts.
+# TYPE scheduler_pod_scheduling_sli_duration_seconds histogram
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.01"} 123
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.02"} 17620
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.04"} 37943
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.08"} 39847
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.16"} 39969
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.32"} 40000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.64"} 40000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="1.28"} 40000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="2.56"} 40000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="5.12"} 40000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="10.24"} 40000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="20.48"} 40000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="40.96"} 40000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="81.92"} 40000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="163.84"} 40000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="327.68"} 40000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="655.36"} 40000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="1310.72"} 40000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="2621.44"} 40000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="5242.88"} 40000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="+Inf"} 40000
+scheduler_pod_scheduling_sli_duration_seconds_sum{attempts="1"} 929.9330074379983
+scheduler_pod_scheduling_sli_duration_seconds_count{attempts="1"} 40000
 ```
 ## Optimize-1 scheduler
 TODO
@@ -102,8 +130,8 @@ Results:
 |------------------|---------------|-------------|----------------|------------|
 | 默认调度器       | 10,000        | 190.504 秒       |  0.0190504Pod/s       | -          |
 | 默认调度器     | 20,000        |  416.759秒        | 0.0208379Pod/s     |  |
-| 默认调度器     | 30,000        |  659.989秒        | 0.02199963Pod/s     |  |
-| 默认调度器     | 40,000        |  秒        | Pod/s     |  |
+| 默认调度器     | 30,000        |  659.989秒        | 0.0232483Pod/s     |  |
+| 默认调度器     | 40,000        |  929.933秒        | Pod/s     |  |
 | 默认调度器     | 50,000        |  秒        | Pod/s     |  |
 | 默认调度器     | 60,000        |  秒        | Pod/s     |  |
 | 默认调度器     | 70,000        |  秒        | Pod/s     |  |
