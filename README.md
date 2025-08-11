@@ -8,6 +8,9 @@ $ kubectl cluster-info --context kwok-demo
 ```bash
 $ docker inspect kwok-demo-kube-scheduler
 $ curl -k https://172.27.0.5:10259/metrics > test.metrics
+$ docker run --rm -it --network host curlimages/curl sh
+~ $ curl -k https://172.19.0.6:10259/metrics  > test.metrics
+~ $ cat test.metrics | grep -i scheduler_pod_scheduling_sli_duration_seconds
 ```
 
 ## Important metrcis

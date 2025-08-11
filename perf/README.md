@@ -113,15 +113,57 @@ scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="+Inf"} 400
 scheduler_pod_scheduling_sli_duration_seconds_sum{attempts="1"} 929.9330074379983
 scheduler_pod_scheduling_sli_duration_seconds_count{attempts="1"} 40000
 ```
-## Optimize-1 scheduler
-TODO
+## Optimize scheduler without score plugins
 Kube-scheduler configuration
 ```yaml
-
+apiVersion: kubescheduler.config.k8s.io/v1
+kind: KubeSchedulerConfiguration
+parallelism: 128            # 并行度
+profiles:
+- schedulerName: with-score-scheduler
+  plugins:
+    score:
+      disabled:
+      - name: "*"
+    filter:
+      disabled:
+      - name: "*"
+      enabled:
+      - name: NodeResourcesFit  # CPU/内存/GPU等资源匹配
+      - name: NodePorts         # 检查端口冲突
+      - name: TaintToleration   # 污点容忍（新名字）
+  pluginConfig:
+  - name: NodeResourcesFit
+    args:
 ```
 Results:
 ```bash
-
+cat test.metrics | grep -i scheduler_pod_scheduling_sli_duration_seconds
+# HELP scheduler_pod_scheduling_sli_duration_seconds [BETA] E2e latency for a pod being scheduled, from the time the pod enters the scheduling queue and might involve multiple scheduling attempts.
+# TYPE scheduler_pod_scheduling_sli_duration_seconds histogram
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.01"} 9942
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.02"} 9970
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.04"} 9975
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.08"} 10000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.16"} 10000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.32"} 10000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.64"} 10000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="1.28"} 10000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="2.56"} 10000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="5.12"} 10000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="10.24"} 10000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="20.48"} 10000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="40.96"} 10000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="81.92"} 10000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="163.84"} 10000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="327.68"} 10000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="655.36"} 10000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="1310.72"} 10000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="2621.44"} 10000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="5242.88"} 10000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="+Inf"} 10000
+scheduler_pod_scheduling_sli_duration_seconds_sum{attempts="1"} 40.02301405600003
+scheduler_pod_scheduling_sli_duration_seconds_count{attempts="1"} 10000
 ```
 
 
