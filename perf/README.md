@@ -118,7 +118,8 @@ Kube-scheduler configuration
 ```yaml
 apiVersion: kubescheduler.config.k8s.io/v1
 kind: KubeSchedulerConfiguration
-parallelism: 128            # 并行度
+percentageOfNodesToScore: 1
+parallelism: 256            # 并行度
 profiles:
 - schedulerName: with-score-scheduler
   plugins:
@@ -164,20 +165,48 @@ scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="5242.88"} 
 scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="+Inf"} 10000
 scheduler_pod_scheduling_sli_duration_seconds_sum{attempts="1"} 40.02301405600003
 scheduler_pod_scheduling_sli_duration_seconds_count{attempts="1"} 10000
+
+~ $ cat test.metrics | grep -i scheduler_pod_scheduling_sli_duration_seconds
+# HELP scheduler_pod_scheduling_sli_duration_seconds [BETA] E2e latency for a pod being scheduled, from the time the pod enters the scheduling queue and might involve multiple scheduling attempts.
+# TYPE scheduler_pod_scheduling_sli_duration_seconds histogram
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.01"} 19915
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.02"} 19962
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.04"} 19998
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.08"} 20000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.16"} 20000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.32"} 20000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.64"} 20000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="1.28"} 20000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="2.56"} 20000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="5.12"} 20000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="10.24"} 20000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="20.48"} 20000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="40.96"} 20000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="81.92"} 20000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="163.84"} 20000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="327.68"} 20000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="655.36"} 20000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="1310.72"} 20000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="2621.44"} 20000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="5242.88"} 20000
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="+Inf"} 20000
+scheduler_pod_scheduling_sli_duration_seconds_sum{attempts="1"} 76.55716421399993
+scheduler_pod_scheduling_sli_duration_seconds_count{attempts="1"} 20000
 ```
 
 
 ## Default Scheduler Results
 | 调度器类型       | 调度 Pod 数量 | 调度总耗时 | 每秒调度速度 | 性能提升 |
 |------------------|---------------|-------------|----------------|------------|
-| 默认调度器       | 10,000        | 190.504 秒       |  0.0190504Pod/s       | -          |
-| 默认调度器     | 20,000        |  416.759秒        | 0.0208379Pod/s     |  |
-| 默认调度器     | 30,000        |  659.989秒        | 0.0232483Pod/s     |  |
+| 默认调度器       | 10,000        | 190.504 秒       |  52Pod/s       | -          |
+| 默认调度器     | 20,000        |  416.759秒        | 48Pod/s     |  |
+| 默认调度器     | 30,000        |  659.989秒        | 45Pod/s     |  |
 | 默认调度器     | 40,000        |  929.933秒        | Pod/s     |  |
-| 默认调度器     | 50,000        |  秒        | Pod/s     |  |
-| 默认调度器     | 60,000        |  秒        | Pod/s     |  |
-| 默认调度器     | 70,000        |  秒        | Pod/s     |  |
-| 默认调度器     | 80,000        |  秒        | Pod/s     |  |
-| 默认调度器     | 90,000        |  秒        | Pod/s     |  |
-| 默认调度器     | 100,000        |  秒        | Pod/s     |  |
+## Scheduler with none score plugins
 
+| 调度器类型       | 调度 Pod 数量 | 调度总耗时 | 每秒调度速度 | 性能提升 |
+|------------------|---------------|-------------|----------------|------------|
+| 默认调度器       | 10,000        | 40 秒       |  250Pod/s       | -          |
+| 默认调度器     | 20,000        |  76.56秒        | 261Pod/s     |  |
+| 默认调度器     | 30,000        |  秒        | Pod/s     |  |
+| 默认调度器     | 40,000        |  秒        | Pod/s     |  |
