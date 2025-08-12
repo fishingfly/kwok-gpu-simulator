@@ -142,9 +142,9 @@ Results:
 cat test.metrics | grep -i scheduler_pod_scheduling_sli_duration_seconds
 # HELP scheduler_pod_scheduling_sli_duration_seconds [BETA] E2e latency for a pod being scheduled, from the time the pod enters the scheduling queue and might involve multiple scheduling attempts.
 # TYPE scheduler_pod_scheduling_sli_duration_seconds histogram
-scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.01"} 9942
-scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.02"} 9970
-scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.04"} 9975
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.01"} 9943
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.02"} 9967
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.04"} 9981
 scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.08"} 10000
 scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.16"} 10000
 scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.32"} 10000
@@ -163,7 +163,7 @@ scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="1310.72"} 
 scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="2621.44"} 10000
 scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="5242.88"} 10000
 scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="+Inf"} 10000
-scheduler_pod_scheduling_sli_duration_seconds_sum{attempts="1"} 40.02301405600003
+scheduler_pod_scheduling_sli_duration_seconds_sum{attempts="1"} 39.753119458999805
 scheduler_pod_scheduling_sli_duration_seconds_count{attempts="1"} 10000
 
 ~ $ cat test.metrics | grep -i scheduler_pod_scheduling_sli_duration_seconds
@@ -194,19 +194,22 @@ scheduler_pod_scheduling_sli_duration_seconds_sum{attempts="1"} 76.5571642139999
 scheduler_pod_scheduling_sli_duration_seconds_count{attempts="1"} 20000
 ```
 
-
+# Results
+测试数据中`调度总耗时`是指scheduler处理调度pod所耗费的时间。不包含pod创建和pod启动等节点的时间。
 ## Default Scheduler Results
-| 调度器类型       | 调度 Pod 数量 | 调度总耗时 | 每秒调度速度 | 性能提升 |
-|------------------|---------------|-------------|----------------|------------|
-| 默认调度器       | 10,000        | 190.504 秒       |  52Pod/s       | -          |
-| 默认调度器     | 20,000        |  416.759秒        | 48Pod/s     |  |
-| 默认调度器     | 30,000        |  659.989秒        | 45Pod/s     |  |
-| 默认调度器     | 40,000        |  929.933秒        | Pod/s     |  |
+| 调度器类型+节点数量| 调度 Pod 数量 | 调度总耗时 | 每秒调度速度    |
+|-------------------|--------------|------------|----------------|
+| 默认调度器+1.25W   | 10,000       | 190.504 秒 |  52Pod/s       |
+| 默认调度器+1.25W   | 20,000       |  416.759秒 | 48Pod/s        |
+| 默认调度器+1.25W   | 30,000       |  659.989秒 | 45Pod/s        |
+| 默认调度器+1.25W   | 40,000       |  929.933秒 | Pod/s          |
 ## Scheduler with none score plugins
 
-| 调度器类型       | 调度 Pod 数量 | 调度总耗时 | 每秒调度速度 | 性能提升 |
-|------------------|---------------|-------------|----------------|------------|
-| 默认调度器       | 10,000        | 40 秒       |  250Pod/s       | -          |
-| 默认调度器     | 20,000        |  76.56秒        | 261Pod/s     |  |
-| 默认调度器     | 30,000        |  秒        | Pod/s     |  |
-| 默认调度器     | 40,000        |  秒        | Pod/s     |  |
+| 调度器类型+节点数量| 调度 Pod 数量 | 调度总耗时    | 每秒调度速度 |
+|-------------------|---------------|-------------|--------------|
+| 优化调度器+1.25W   | 10,000        | 39.75 秒    |  251Pod/s    |
+| 优化调度器+1.25W   | 20,000        | 76.56秒     | 261Pod/s     |
+| 优化调度器+5W      | 10,000        | 41.19秒     | 243Pod/s     |
+| 优化调度器+1.25W   | 10,000, 8GPU  | 39.56秒     | 253Pod/s     |
+
+当前使用kwok无法模拟多apiserver和多etcd等场景，如能提升pod的创建速度，也许调度耗时还能缩短。
