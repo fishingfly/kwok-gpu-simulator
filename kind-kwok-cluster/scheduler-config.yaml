@@ -1,13 +1,14 @@
 apiVersion: kubescheduler.config.k8s.io/v1
 kind: KubeSchedulerConfiguration
-#clientConnection:
+clientConnection:
+  kubeconfig: /etc/kubernetes/scheduler.conf
 #  qps: 2000
 #  burst: 4000
 percentageOfNodesToScore: 1   # 只评分 5% 节点
 parallelism: 128            # 并行度
 
 profiles:
-- schedulerName: 2-scheduler
+- schedulerName: default-scheduler
   plugins:
     score:
       disabled:
