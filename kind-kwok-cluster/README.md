@@ -1,8 +1,12 @@
 # 使用Kind模拟控制面多副本
 
-# KIND 部署集群
+# KIND 部署单副本集群
 ```bash
 ./kind create cluster --name ha-kwok --config test.yaml
+```
+# KIND 部署多副本集群
+```bash
+./kind create cluster --name ha-kwok --config kind-ha-kwok.yaml
 ```
 
 # Kwok模拟节点
