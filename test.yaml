@@ -2,13 +2,43 @@ apiVersion: config.kwok.x-k8s.io/v1alpha1
 kind: KwokctlConfiguration
 metadata:
   creationTimestamp: null
-  #components:
-  #  - name: kube-scheduler
+  components:
+ # - name: kube-apiserver
+ #   Command:
+ #   - kube-apiserver 
+ #   Args:
+ #   - --allow-privileged=true
+ #   - --etcd-servers=http://kwok-demo-etcd:2379
+ #   - --etcd-prefix=/registry
+ #   - --bind-address=0.0.0.0
+ #   - --secure-port=6443
+ #   - --tls-cert-file=/etc/kubernetes/pki/admin.crt
+ #   - --tls-private-key-file=/etc/kubernetes/pki/admin.key
+ #   - --client-ca-file=/etc/kubernetes/pki/ca.crt
+ #   - --service-account-key-file=/etc/kubernetes/pki/admin.key
+ #   - --service-account-signing-key-file=/etc/kubernetes/pki/admin.key
+ #   - --service-account-issuer=https://kubernetes.default.svc.cluster.local
+ #   - --proxy-client-key-file=/etc/kubernetes/pki/admin.key
+ #   - --proxy-client-cert-file=/etc/kubernetes/pki/admin.crt
+ #   - --max-requests-inflight=4000
+ #   - --max-mutating-requests-inflight=2000
+ #   - --request-timeout=1m
+ #   - --min-request-timeout=300
   #  ports:
   #  - port: 10259
   #    hostPort: 30259
   #    name: test
 componentsPatches:
+- name: kube-apiserver
+  extraArgs:
+  - key: max-requests-inflight
+    value: "10000"
+  - key: max-mutating-requests-inflight
+    value: "5000"
+  - key: request-timeout
+    value: 300s
+  - key: min-request-timeout
+    value: "180"
 - name: kube-scheduler
   extraArgs:
   - key: bind-address
@@ -62,7 +92,7 @@ options:
   kubeControllerManagerNodeMonitorPeriodMilliseconds: 5000
   kubeSchedulerBinary: https://dl.k8s.io/release/v1.32.3/bin/linux/amd64/kube-scheduler
   kubeSchedulerImage: registry.k8s.io/kube-scheduler:v1.32.3
-  kubeSchedulerConfig: ./fast-kube-schduler-config.yaml
+  kubeSchedulerConfig: ./none-score-kube-schduler-config.yaml
   kubeVersion: v1.32.3
   kubectlBinary: https://dl.k8s.io/release/v1.32.3/bin/linux/amd64/kubectl
   kubectlImage: registry.k8s.io/kubectl:v1.32.3

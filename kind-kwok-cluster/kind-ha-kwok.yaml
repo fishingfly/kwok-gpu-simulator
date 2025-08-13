@@ -1,0 +1,75 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  podSubnet: "10.244.0.0/16"
+  serviceSubnet: "10.96.0.0/12"
+
+nodes:
+  - role: control-plane
+    image: kindest/node:v1.32.3@sha256:91c4725ffb6cb509114cf11002489a1ac721e5fd532de8df21eddd9685791841
+    extraPortMappings:
+      - containerPort: 6443
+        hostPort: 6443
+    extraMounts:
+      - hostPath: ./scheduler-config.yaml
+        containerPath: /etc/kubernetes/scheduler-config.yaml
+    kubeadmConfigPatches:
+      - |
+        kind: ClusterConfiguration
+        apiServer:
+          extraArgs:
+            max-requests-inflight: "5000"
+            max-mutating-requests-inflight: "2500"
+            etcd-quota-backend-bytes: "8589934592"  # 8GB etcd 配额
+            watch-cache: "true"
+        scheduler:
+          extraArgs:
+            config: "/etc/kubernetes/scheduler-config.yaml"
+        controllerManager:
+          extraArgs:
+            terminated-pod-gc-threshold: "10000"
+
+  - role: control-plane
+    image: kindest/node:v1.32.3@sha256:91c4725ffb6cb509114cf11002489a1ac721e5fd532de8df21eddd9685791841
+    extraMounts:
+      - hostPath: ./scheduler-config.yaml
+        containerPath: /etc/kubernetes/scheduler-config.yaml
+    kubeadmConfigPatches:
+      - |
+        kind: ClusterConfiguration
+        apiServer:
+          extraArgs:
+            max-requests-inflight: "5000"
+            max-mutating-requests-inflight: "2500"
+            etcd-quota-backend-bytes: "8589934592"
+            watch-cache: "true"
+        scheduler:
+          extraArgs:
+            config: "/etc/kubernetes/scheduler-config.yaml"
+        controllerManager:
+          extraArgs:
+            terminated-pod-gc-threshold: "10000"
+
+  - role: control-plane
+    image: kindest/node:v1.32.3@sha256:91c4725ffb6cb509114cf11002489a1ac721e5fd532de8df21eddd9685791841
+    extraMounts:
+      - hostPath: ./scheduler-config.yaml
+        containerPath: /etc/kubernetes/scheduler-config.yaml
+    kubeadmConfigPatches:
+      - |
+        kind: ClusterConfiguration
+        apiServer:
+          extraArgs:
+            max-requests-inflight: "5000"
+            max-mutating-requests-inflight: "2500"
+            etcd-quota-backend-bytes: "8589934592"
+            watch-cache: "true"
+        scheduler:
+          extraArgs:
+            config: "/etc/kubernetes/scheduler-config.yaml"
+        controllerManager:
+          extraArgs:
+            terminated-pod-gc-threshold: "10000"
+
+  - role: worker
+    image: kindest/node:v1.32.3@sha256:91c4725ffb6cb509114cf11002489a1ac721e5fd532de8df21eddd9685791841

@@ -13,6 +13,7 @@ spec:
       labels:
         app: fake-pod
     spec:
+      schedulerName: 2-scheduler
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
