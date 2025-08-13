@@ -31,5 +31,56 @@ nodes:
             mountPath: /etc/test/scheduler-config.yaml
             readOnly: true
             pathType: "FileOrCreate"
-
+  - role: control-plane
+    extraMounts:
+    - hostPath: /root/kwok/kwok-gpu-simulator/kind-kwok-cluster/scheduler-config.yaml
+      containerPath: /etc/test/scheduler-config.yaml
+      readOnly: true
+    image: kindest/node:v1.32.3
+    kubeadmConfigPatches:
+      - |
+        kind: ClusterConfiguration
+        apiServer:
+          extraArgs:
+            max-requests-inflight: "5000"
+            max-mutating-requests-inflight: "2500"
+        scheduler:
+          extraArgs:
+            bind-address: "0.0.0.0"
+            secure-port: "10259"
+            config: "/etc/test/scheduler-config.yaml"
+            authorization-always-allow-paths: "/metrics"
+            #kubeconfig: "/etc/kubernetes/scheduler.conf"
+          extraVolumes:
+          - name: scheduler-config
+            hostPath: /etc/test/scheduler-config.yaml
+            mountPath: /etc/test/scheduler-config.yaml
+            readOnly: true
+            pathType: "FileOrCreate"
+  - role: control-plane
+    extraMounts:
+    - hostPath: /root/kwok/kwok-gpu-simulator/kind-kwok-cluster/scheduler-config.yaml
+      containerPath: /etc/test/scheduler-config.yaml
+      readOnly: true
+    image: kindest/node:v1.32.3
+    kubeadmConfigPatches:
+      - |
+        kind: ClusterConfiguration
+        apiServer:
+          extraArgs:
+            max-requests-inflight: "5000"
+            max-mutating-requests-inflight: "2500"
+        scheduler:
+          extraArgs:
+            bind-address: "0.0.0.0"
+            secure-port: "10259"
+            config: "/etc/test/scheduler-config.yaml"
+            authorization-always-allow-paths: "/metrics"
+            #kubeconfig: "/etc/kubernetes/scheduler.conf"
+          extraVolumes:
+          - name: scheduler-config
+            hostPath: /etc/test/scheduler-config.yaml
+            mountPath: /etc/test/scheduler-config.yaml
+            readOnly: true
+            pathType: "FileOrCreate"
 
