@@ -194,6 +194,64 @@ scheduler_pod_scheduling_sli_duration_seconds_sum{attempts="1"} 76.5571642139999
 scheduler_pod_scheduling_sli_duration_seconds_count{attempts="1"} 20000
 ```
 
+## Multi control-planes
+5k nodes, and 1w gpu pods
+
+kind+kwok
+
+```bash
+cat test.metrics | grep -i scheduler_pod_scheduling_sli_duration_seconds
+# HELP scheduler_pod_scheduling_sli_duration_seconds [BETA] E2e latency for a pod being scheduled, from the time the pod enters the scheduling queue and might involve multiple scheduling attempts.
+# TYPE scheduler_pod_scheduling_sli_duration_seconds histogram
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.01"} 19957
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.02"} 20014
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.04"} 20016
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.08"} 20016
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.16"} 20016
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.32"} 20016
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="0.64"} 20016
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="1.28"} 20016
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="2.56"} 20016
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="5.12"} 20016
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="10.24"} 20016
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="20.48"} 20016
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="40.96"} 20016
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="81.92"} 20016
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="163.84"} 20016
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="327.68"} 20016
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="655.36"} 20016
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="1310.72"} 20016
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="2621.44"} 20016
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="5242.88"} 20016
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="1",le="+Inf"} 20016
+scheduler_pod_scheduling_sli_duration_seconds_sum{attempts="1"} 48.93293801800002
+scheduler_pod_scheduling_sli_duration_seconds_count{attempts="1"} 20016
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="2",le="0.01"} 0
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="2",le="0.02"} 0
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="2",le="0.04"} 0
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="2",le="0.08"} 0
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="2",le="0.16"} 0
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="2",le="0.32"} 0
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="2",le="0.64"} 0
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="2",le="1.28"} 0
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="2",le="2.56"} 0
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="2",le="5.12"} 0
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="2",le="10.24"} 0
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="2",le="20.48"} 3
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="2",le="40.96"} 3
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="2",le="81.92"} 3
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="2",le="163.84"} 3
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="2",le="327.68"} 3
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="2",le="655.36"} 3
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="2",le="1310.72"} 3
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="2",le="2621.44"} 3
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="2",le="5242.88"} 3
+scheduler_pod_scheduling_sli_duration_seconds_bucket{attempts="2",le="+Inf"} 3
+scheduler_pod_scheduling_sli_duration_seconds_sum{attempts="2"} 41.179559049999995
+scheduler_pod_scheduling_sli_duration_seconds_count{attempts="2"} 3
+
+```
+
 # Results
 测试数据中`调度总耗时`是指scheduler处理调度pod所耗费的时间。不包含pod创建和pod启动等节点的时间。
 ## Default Scheduler Results
@@ -209,7 +267,9 @@ scheduler_pod_scheduling_sli_duration_seconds_count{attempts="1"} 20000
 |-------------------|---------------|-------------|--------------|
 | 优化调度器+1.25W   | 10,000        | 39.75 秒    |  251Pod/s    |
 | 优化调度器+1.25W   | 20,000        | 76.56秒     | 261Pod/s     |
-| 优化调度器+5W      | 10,000        | 41.19秒     | 243Pod/s     |
+| 优化调度器+5K      | 10,000        | 41.19秒     | 243Pod/s     |
 | 优化调度器+1.25W   | 10,000, 8GPU  | 39.56秒     | 253Pod/s     |
+| 优化调度器+5K      | 10,000        | 24.36秒     | 410Pod/s     |
 
 当前使用kwok无法模拟多apiserver和多etcd等场景，如能提升pod的创建速度，也许调度耗时还能缩短。
+- 验证多副本后，pod创建速度加快，从而增大了scheduler的吞吐量
