@@ -7,7 +7,7 @@ networking:
 nodes:
   - role: control-plane
     extraMounts:
-    - hostPath: /root/kwok/kwok-gpu-simulator/kind-kwok-cluster/scheduler-config.yaml
+    - hostPath: ./scheduler-config.yaml
       containerPath: /etc/test/scheduler-config.yaml
       readOnly: true
     image: kindest/node:v1.32.3
@@ -31,9 +31,15 @@ nodes:
             mountPath: /etc/test/scheduler-config.yaml
             readOnly: true
             pathType: "FileOrCreate"
+        etcd:
+          extraArgs:
+            auto-compaction-mode: "revision"
+            auto-compaction-retention: "5000"
+            snapshot-count: "100000"
+            quota-backend-bytes: "17179869184"
   - role: control-plane
     extraMounts:
-    - hostPath: /root/kwok/kwok-gpu-simulator/kind-kwok-cluster/scheduler-config.yaml
+    - hostPath: ./scheduler-config.yaml
       containerPath: /etc/test/scheduler-config.yaml
       readOnly: true
     image: kindest/node:v1.32.3
@@ -57,9 +63,15 @@ nodes:
             mountPath: /etc/test/scheduler-config.yaml
             readOnly: true
             pathType: "FileOrCreate"
+        etcd:
+          extraArgs:
+            auto-compaction-mode: "revision"
+            auto-compaction-retention: "5000"
+            snapshot-count: "100000"
+            quota-backend-bytes: "17179869184"
   - role: control-plane
     extraMounts:
-    - hostPath: /root/kwok/kwok-gpu-simulator/kind-kwok-cluster/scheduler-config.yaml
+    - hostPath: ./scheduler-config.yaml
       containerPath: /etc/test/scheduler-config.yaml
       readOnly: true
     image: kindest/node:v1.32.3
@@ -83,4 +95,10 @@ nodes:
             mountPath: /etc/test/scheduler-config.yaml
             readOnly: true
             pathType: "FileOrCreate"
+        etcd:
+          extraArgs:
+            auto-compaction-mode: "revision"
+            auto-compaction-retention: "5000"
+            snapshot-count: "100000"
+            quota-backend-bytes: "17179869184"
 
